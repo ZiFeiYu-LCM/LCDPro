@@ -3,7 +3,7 @@
 .\objects\gpioinit.o: ..\STM32F10x_FWLIB\inc\stm32f10x_gpio.h
 .\objects\gpioinit.o: ..\USER\stm32f10x.h
 .\objects\gpioinit.o: ..\CORE\core_cm3.h
-.\objects\gpioinit.o: D:\software\Keil\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\gpioinit.o: D:\software\keil\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\gpioinit.o: ..\USER\system_stm32f10x.h
 .\objects\gpioinit.o: ..\USER\stm32f10x_conf.h
 .\objects\gpioinit.o: ..\STM32F10x_FWLIB\inc\stm32f10x_adc.h

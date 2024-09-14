@@ -1,7 +1,7 @@
 .\objects\main.o: main.c
 .\objects\main.o: stm32f10x.h
 .\objects\main.o: ..\CORE\core_cm3.h
-.\objects\main.o: D:\software\Keil\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\main.o: D:\software\keil\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\main.o: system_stm32f10x.h
 .\objects\main.o: stm32f10x_conf.h
 .\objects\main.o: ..\STM32F10x_FWLIB\inc\stm32f10x_adc.h
@@ -28,7 +28,7 @@
 .\objects\main.o: ..\STM32F10x_FWLIB\inc\stm32f10x_usart.h
 .\objects\main.o: ..\STM32F10x_FWLIB\inc\stm32f10x_wwdg.h
 .\objects\main.o: ..\STM32F10x_FWLIB\inc\misc.h
-.\objects\main.o: D:\software\Keil\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\main.o: D:\software\keil\ARM\ARMCC\Bin\..\include\stdio.h
 .\objects\main.o: ..\SYSTEM\./uartTemp/usartTemp.h
 .\objects\main.o: ..\SYSTEM\./timerInit/timerInit.h
 .\objects\main.o: ..\SYSTEM\./delay/delay.h

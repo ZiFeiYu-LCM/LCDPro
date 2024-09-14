@@ -3,7 +3,7 @@
 .\objects\usarttemp.o: ..\STM32F10x_FWLIB\inc\stm32f10x_usart.h
 .\objects\usarttemp.o: ..\USER\stm32f10x.h
 .\objects\usarttemp.o: ..\CORE\core_cm3.h
-.\objects\usarttemp.o: D:\software\Keil\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\usarttemp.o: D:\software\keil\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\usarttemp.o: ..\USER\system_stm32f10x.h
 .\objects\usarttemp.o: ..\USER\stm32f10x_conf.h
 .\objects\usarttemp.o: ..\STM32F10x_FWLIB\inc\stm32f10x_adc.h
@@ -30,6 +30,6 @@
 .\objects\usarttemp.o: ..\STM32F10x_FWLIB\inc\stm32f10x_usart.h
 .\objects\usarttemp.o: ..\STM32F10x_FWLIB\inc\stm32f10x_wwdg.h
 .\objects\usarttemp.o: ..\STM32F10x_FWLIB\inc\misc.h
-.\objects\usarttemp.o: D:\software\Keil\ARM\ARMCC\Bin\..\include\stdio.h
-.\objects\usarttemp.o: D:\software\Keil\ARM\ARMCC\Bin\..\include\string.h
+.\objects\usarttemp.o: D:\software\keil\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\usarttemp.o: D:\software\keil\ARM\ARMCC\Bin\..\include\string.h
 .\objects\usarttemp.o: ..\SYSTEM\./gpioInit/gpioInit.h

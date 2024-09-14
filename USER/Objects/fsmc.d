@@ -1,8 +1,10 @@
 .\objects\fsmc.o: ..\SYSTEM\fsmc\fsmc.c
-.\objects\fsmc.o: ..\SYSTEM\fsmc\fsmc.h
+.\objects\fsmc.o: ..\SYSTEM\./fsmc/fsmc.h
+.\objects\fsmc.o: ..\SYSTEM\./delay/delay.h
+.\objects\fsmc.o: ..\SYSTEM\./sys/sys.h
 .\objects\fsmc.o: ..\USER\stm32f10x.h
 .\objects\fsmc.o: ..\CORE\core_cm3.h
-.\objects\fsmc.o: D:\software\Keil\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\fsmc.o: D:\software\keil\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\fsmc.o: ..\USER\system_stm32f10x.h
 .\objects\fsmc.o: ..\USER\stm32f10x_conf.h
 .\objects\fsmc.o: ..\STM32F10x_FWLIB\inc\stm32f10x_adc.h

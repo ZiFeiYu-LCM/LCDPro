@@ -553,10 +553,11 @@ ARM Macro Assembler    Page 9
               00000000 
 Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M3 --apcs=interw
 ork --depend=.\objects\startup_stm32f103xe.d -o.\objects\startup_stm32f103xe.o 
--ID:\software\Keil\Packs\Keil\STM32F1xx_DFP\2.3.0\Device\Include --predefine="_
-_MICROLIB SETA 1" --predefine="__UVISION_VERSION SETA 536" --predefine="STM32F1
-0X_HD SETA 1" --list=.\listings\startup_stm32f103xe.lst ..\CORE\startup_stm32f1
-03xe.s
+-IE:\Pro\LCDPro\USER\RTE -ID:\software\keil\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\D
+evice\Include -ID:\software\keil\ARM\CMSIS\Include --predefine="__EVAL SETA 1" 
+--predefine="__MICROLIB SETA 1" --predefine="__UVISION_VERSION SETA 521" --pred
+efine="STM32F10X_HD SETA 1" --list=.\listings\startup_stm32f103xe.lst ..\CORE\s
+tartup_stm32f103xe.s
 
 
 
@@ -1420,4 +1421,4 @@ Symbol: __main
       At line 156 in file ..\CORE\startup_stm32f103xe.s
 Comment: __main used once
 1 symbol
-421 symbols in table
+422 symbols in table

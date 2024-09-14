@@ -1,10 +1,10 @@
 .\objects\spitemplate.o: ..\SYSTEM\spi\spiTemplate.c
 .\objects\spitemplate.o: ..\SYSTEM\./spi/spiTemplate.h
-.\objects\spitemplate.o: D:\software\Keil\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\spitemplate.o: D:\software\keil\ARM\ARMCC\Bin\..\include\stdio.h
 .\objects\spitemplate.o: ..\STM32F10x_FWLIB\inc\stm32f10x_i2c.h
 .\objects\spitemplate.o: ..\USER\stm32f10x.h
 .\objects\spitemplate.o: ..\CORE\core_cm3.h
-.\objects\spitemplate.o: D:\software\Keil\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\spitemplate.o: D:\software\keil\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\spitemplate.o: ..\USER\system_stm32f10x.h
 .\objects\spitemplate.o: ..\USER\stm32f10x_conf.h
 .\objects\spitemplate.o: ..\STM32F10x_FWLIB\inc\stm32f10x_adc.h

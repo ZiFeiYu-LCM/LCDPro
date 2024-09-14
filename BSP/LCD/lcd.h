@@ -1,7 +1,11 @@
 #ifndef __LCD_H
 #define __LCD_H
+#define STM32F10X_HD 1
 #include "stm32f10x.h"
 #include "./fsmc/fsmc.h"
+#include <stdio.h>
+#include <stdint.h>
+#include "./delay/delay.h"
 
 struct lcdStruct;
 
@@ -25,6 +29,7 @@ struct lcdStruct{
 
 extern struct lcdStruct lcdDev;
 
+#define TOUCH_ENABLE      1
 
 #define LCD_WIDTH 				320
 #define LCD_HEIGHT 				480
@@ -77,12 +82,12 @@ extern struct lcdStruct lcdDev;
 
 
 
-//REG
+//常用REG
 #define ID_REG 					0xD4			//读取ID
-#define DIR_REG 				0X36			//屏幕方向
-#define GRAM_REG				0X2C			//GRAM地址
-#define X_REG						0X2A			//设置x坐标	
-#define Y_REG						0X2B			//设置y坐标
+#define DIR_REG 				0x36			//屏幕方向
+#define GRAM_REG				0x2C			//GRAM地址
+#define X_REG						0x2A			//设置x坐标	
+#define Y_REG						0x2B			//设置y坐标
 #define READ_COLOR_REG	0x2E			//读取某个点的颜色
 #define DISPLAY_ON_REG	0x29			//LCD开启显示
 #define DISPLAY_OFF_REG	0x28			//LCD关闭显示
@@ -95,7 +100,7 @@ void LCD_Init(void);
 void LCD_Scan_Dir(uint8_t dir);
 void initGpio(void);
 void LCD_Set_Cursor(uint16_t x, uint16_t y);
-void LCD_Draw_Point(uint16_t x, uint16_t y, uint32_t color);
+void LCD_Draw_Point(uint16_t x, uint16_t y, uint16_t color);
 uint32_t LCD_Read_Point(uint16_t x, uint16_t y);
 void LCD_Clear(uint16_t color);
 void LCD_Display_On(void);
@@ -108,8 +113,65 @@ void LCD_Color_Fill(uint16_t sx, uint16_t sy, uint16_t ex, uint16_t ey, uint16_t
 
 
 
+//触摸屏
+#if TOUCH_ENABLE
+#include "./spi/spiTemplate.h"
+#define CT_MAX_TOUCH 			10
 
 
+struct tpStruct{
+		//存储坐标，用 x[0],y[0]代表:此次扫描时,触屏的坐标,用 x[9],y[9]存储第一次按下时的坐标
+		uint16_t x[CT_MAX_TOUCH];
+		uint16_t y[CT_MAX_TOUCH];
+	
+		//点击状态
+		uint16_t satate;	
+	
+		//校准因子
+		float xfac;
+		float yfac;
+		short xc;
+		short yc;
+
+};
+
+extern struct tpStruct tpDev;
+extern struct spiStruct tpSpi;
+
+
+//命令
+#define XCMD							0xD0
+#define YCMD							0x90
+
+//引脚
+#define SPI_CS_PIN				GPIO_Pin_11
+#define SPI_MISO_PIN			GPIO_Pin_2
+#define SPI_MOSI_PIN			GPIO_Pin_9
+#define SPI_SCK_PIN				GPIO_Pin_1
+#define TOUCH_IT_PIN			GPIO_Pin_10
+
+#define SPI_CS_PORT				GPIOF
+#define SPI_MISO_PORT			GPIOB
+#define SPI_MOSI_PORT			GPIOF
+#define SPI_SCK_PORT			GPIOB
+#define TOUCH_IT_PORT			GPIOF
+
+#define	RCC_CS_PORT				RCC_APB2Periph_GPIOF
+#define RCC_MISO_PORT			RCC_APB2Periph_GPIOB
+#define RCC_MOSI_PORT			RCC_APB2Periph_GPIOF
+#define RCC_SCK_PORT			RCC_APB2Periph_GPIOB
+#define RCC_IT_PORT				RCC_APB2Periph_GPIOF
+
+
+
+
+#define TP_READ_TIMES			10	
+#define TP_XY_ERR_RANGE		50
+#define TP_PRES_DOWN    	0x8000
+#define TOUCH_IT					(uint8_t)GPIO_ReadInputDataBit(TOUCH_IT_PORT, TOUCH_IT_PIN)
+
+
+#endif
 
 
 

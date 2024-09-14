@@ -2,7 +2,7 @@
 .\objects\lcd.o: ..\BSP\./LCD/lcd.h
 .\objects\lcd.o: ..\USER\stm32f10x.h
 .\objects\lcd.o: ..\CORE\core_cm3.h
-.\objects\lcd.o: D:\software\Keil\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\lcd.o: D:\software\keil\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\lcd.o: ..\USER\system_stm32f10x.h
 .\objects\lcd.o: ..\USER\stm32f10x_conf.h
 .\objects\lcd.o: ..\STM32F10x_FWLIB\inc\stm32f10x_adc.h
@@ -30,6 +30,7 @@
 .\objects\lcd.o: ..\STM32F10x_FWLIB\inc\stm32f10x_wwdg.h
 .\objects\lcd.o: ..\STM32F10x_FWLIB\inc\misc.h
 .\objects\lcd.o: ..\SYSTEM\./fsmc/fsmc.h
-.\objects\lcd.o: D:\software\Keil\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\lcd.o: D:\software\keil\ARM\ARMCC\Bin\..\include\stdio.h
 .\objects\lcd.o: ..\SYSTEM\./delay/delay.h
 .\objects\lcd.o: ..\SYSTEM\./sys/sys.h
+.\objects\lcd.o: ..\SYSTEM\./spi/spiTemplate.h

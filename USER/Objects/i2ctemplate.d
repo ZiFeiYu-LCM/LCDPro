@@ -1,10 +1,10 @@
 .\objects\i2ctemplate.o: ..\SYSTEM\i2c\i2cTemplate.c
 .\objects\i2ctemplate.o: ..\SYSTEM\./i2c/i2cTemplate.h
-.\objects\i2ctemplate.o: D:\software\Keil\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\i2ctemplate.o: D:\software\keil\ARM\ARMCC\Bin\..\include\stdio.h
 .\objects\i2ctemplate.o: ..\STM32F10x_FWLIB\inc\stm32f10x_i2c.h
 .\objects\i2ctemplate.o: ..\USER\stm32f10x.h
 .\objects\i2ctemplate.o: ..\CORE\core_cm3.h
-.\objects\i2ctemplate.o: D:\software\Keil\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\i2ctemplate.o: D:\software\keil\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\i2ctemplate.o: ..\USER\system_stm32f10x.h
 .\objects\i2ctemplate.o: ..\USER\stm32f10x_conf.h
 .\objects\i2ctemplate.o: ..\STM32F10x_FWLIB\inc\stm32f10x_adc.h

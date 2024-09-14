@@ -1,9 +1,7 @@
 #include "./LCD/lcd.h"
-#include "stdio.h"
-#include "./delay/delay.h"
+
+
 struct lcdStruct lcdDev;
-
-
 
 //设置寄存器
 void LCD_Set_Reg(volatile uint16_t reg){
@@ -167,21 +165,25 @@ void initGpio(){
 
 //设置lcd的坐标
 void LCD_Set_Cursor(uint16_t x, uint16_t y){
+	if(x >= lcdDev.width || y >= lcdDev.height){
+		x=0;
+		y=0;
+	}
 	LCD_Set_Reg(lcdDev.setxcmd);
 	LCD_Write_Data(x>>8);
-	LCD_Write_Data(x&0xFF);
+	LCD_Write_Data(x&0x00FF);
 	
 	LCD_Set_Reg(lcdDev.setycmd);
 	LCD_Write_Data(y>>8);
-	LCD_Write_Data(y&0xFF);
+	LCD_Write_Data(y&0x00FF);
 }
 
 //描绘一个像素点
-void LCD_Draw_Point(uint16_t x, uint16_t y, uint32_t color){
+void LCD_Draw_Point(uint16_t x, uint16_t y, uint16_t color){
 	LCD_Set_Cursor(x,y);
-	
-	LCD_Set_RegGram();
-	LCD->LCD_RAM = color;
+	LCD_Write_RegData(lcdDev.wramcmd,color);
+	//LCD_Set_RegGram();
+	//LCD->LCD_RAM = color;
 }
 
 //读取某个像素点的颜色
@@ -203,7 +205,7 @@ uint32_t LCD_Read_Point(uint16_t x, uint16_t y){
 	g <<= 8; 
 	
 	return (((r >> 11) << 11) | ((g >> 10) << 5) | (b >> 11));
-}
+} 
 
 //lcd清屏为特定颜色
 void LCD_Clear(uint16_t color){
@@ -256,9 +258,6 @@ void LCD_Display_Dir(uint8_t dir){
 		lcdDev.width 	= LCD_WIDTH;
 		lcdDev.height =	LCD_HEIGHT;
 	}
-
-
-	
 	//设置默认扫描方向
 	LCD_Scan_Dir(DFT_SCAN_DIR);
 }
@@ -285,6 +284,172 @@ void LCD_Color_Fill(uint16_t sx, uint16_t sy, uint16_t ex, uint16_t ey, uint16_t
 	}
 
 }
+
+
+
+
+
+//触摸屏
+#if TOUCH_ENABLE
+
+
+struct tpStruct tpDev;
+struct spiStruct tpSpi;
+
+
+void initTp(){
+	//初始化spi
+	spiInit(&tpSpi,SPI_CS_PIN,		SPI_SCK_PIN,	SPI_MISO_PIN,		SPI_MOSI_PIN,
+									SPI_CS_PORT,	SPI_SCK_PORT,	SPI_MISO_PORT,	SPI_MOSI_PORT,
+									RCC_CS_PORT,	RCC_SCK_PORT, RCC_MISO_PORT, 	RCC_MOSI_PORT,	1);
+	
+	//初始化中断引脚
+	RCC_APB2PeriphClockCmd(RCC_IT_PORT, ENABLE);
+	
+	GPIO_InitTypeDef GPIO_InitStructure;
+	GPIO_InitStructure.GPIO_Pin = TOUCH_IT_PIN;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_Init(TOUCH_IT_PORT, &GPIO_InitStructure);
+	
+	GPIO_SetBits(TOUCH_IT_PORT, TOUCH_IT_PIN);
+	
+}
+
+//spi读取触摸设备数据，但是只有数据的高12位有效
+uint16_t tp_Read_Data(uint8_t cmd){
+	uint8_t txData[1];
+	uint8_t	rxData[2];
+	txData[0] = cmd;
+	tpSpi.sendData(&tpSpi,txData,1);
+	tpSpi.readData(&tpSpi,rxData,2);
+	
+	//返回高12位
+	return ((rxData[0]<<8)|rxData[1])>>4;
+}
+
+
+
+
+
+//读取一个坐标点
+uint16_t tp_Read_XorY(uint8_t cmd){
+	uint16_t buf[TP_READ_TIMES];
+	for(uint8_t i=0;i<TP_READ_TIMES;i++){ //连续获得TP_READ_TIMES次坐标
+		buf[i] = tp_Read_Data(cmd);
+	}
+	
+	//将buf顺序排列
+	uint16_t temp;
+	for(uint8_t i=0;i<TP_READ_TIMES-1;i++){
+		for(uint8_t j=0;j<TP_READ_TIMES;j++){
+			if(buf[i] > buf[j]){
+				temp = buf[i];
+				buf[i] = buf[j];
+				buf[j] = temp;
+			}
+		}
+	}
+	
+	//除去最大和最小值，求剩下的和，并返回平均值作为读取到的坐标
+	uint16_t sum = 0;
+	for(uint8_t i=1;i<TP_READ_TIMES-1;i++){
+		sum+=buf[i];
+	}	
+	return sum/(TP_READ_TIMES-2);
+}
+//读取x y坐标
+void _tp_Read_XY(uint16_t *x, uint16_t *y){
+	if(lcdDev.displaydir){//横屏
+		*x = tp_Read_XorY(YCMD);
+		*y = tp_Read_XorY(XCMD);
+		
+	}else{//竖屏
+		*x = tp_Read_XorY(XCMD);
+		*y = tp_Read_XorY(YCMD);
+	}
+}
+/*
+更精确的读取x y坐标
+读取x y坐标2次，并且误差在 TP_XY_ERR_RANGE 以内，则取两次的平均值作为最后的输出
+*/
+uint8_t tp_Read_XY(uint16_t *x, uint16_t *y){
+	uint16_t x1,x2,y1,y2;
+	
+	_tp_Read_XY(&x1,&y1);
+	_tp_Read_XY(&x2,&y2);
+	
+	
+	if( (((x1<=x2)&&((x2-x1)<TP_XY_ERR_RANGE)) || ((x2<=x1)&&((x1-x2)<TP_XY_ERR_RANGE))) &&
+			(((y1<=y2)&&((y2-y1)<TP_XY_ERR_RANGE)) || ((y2<=y1)&&((y1-y2)<TP_XY_ERR_RANGE))))
+	{
+			*x = (x1+x2)/2;
+			*y = (y1+y2)/2;
+			return 0;
+	}
+
+	return 1;
+}
+
+
+
+/*
+检测触摸屏有没有被按下
+mode :0 读取屏幕坐标    1 读取物理坐标
+*/
+uint8_t tp_Scan(uint8_t mode){
+	if(TOUCH_IT == 0){ //被按下
+		if(mode){//读取物理坐标
+			tp_Read_XY(&tpDev.x[0],&tpDev.y[0]);
+		}else if( !tp_Read_XY(&tpDev.x[0],&tpDev.y[0]) ){//读取物理坐标并转换为屏幕坐标
+			tpDev.x[0] = (signed short)(tpDev.x[0] - tpDev.xc)
+													/ tpDev.xfac + lcdDev.width / 2;
+			tpDev.y[0] = (signed short)(tpDev.y[0] - tpDev.yc)
+													/ tpDev.yfac + lcdDev.height / 2;
+		}
+		
+		//如果是第一次被按下，则记录下此次的坐标，即第一次按下的坐标
+		if(!(tpDev.satate&TP_PRES_DOWN)){
+			tpDev.satate |= TP_PRES_DOWN;
+			tpDev.x[CT_MAX_TOUCH - 1] = tpDev.x[0];
+			tpDev.y[CT_MAX_TOUCH - 1] = tpDev.y[0];
+		}
+		
+	}else{//没有被按下
+		if(tpDev.satate&TP_PRES_DOWN){//之前被按下了，现在没有被按下，则清除按下的标记
+			
+			tpDev.satate &= ~TP_PRES_DOWN;
+			
+		}else{
+			tpDev.x[CT_MAX_TOUCH - 1] = 0;
+			tpDev.y[CT_MAX_TOUCH - 1] = 0;			
+			tpDev.x[0] = 0xffff;
+			tpDev.y[0] = 0xffff;	
+		}
+	}
+	
+	return tpDev.satate&TP_PRES_DOWN;
+}
+
+
+void tp_Adjust(){
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+#endif
+
 
 
 
